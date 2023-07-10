@@ -305,25 +305,27 @@ func (g *Mixed) Start(ctx context.Context, wait chan struct{}) (Operations, erro
 						Endpoint: client.EndpointURL().String(),
 					}
 					op.Start = time.Now()
-					res, err := client.PutObject(nonTerm, g.Bucket, obj.Name, obj.Reader, obj.Size, putOpts)
-					op.End = time.Now()
-					if err != nil {
-						g.Error("upload error:", err)
-						op.Err = err.Error()
-					}
-					obj.VersionID = res.VersionID
-
-					if res.Size != obj.Size && op.Err == "" {
-						err := fmt.Sprint("short upload. want:", obj.Size, ", got:", res.Size)
-						if op.Err == "" {
-							op.Err = err
+					if len(g.Dist.objects) == 2500 {
+						res, err := client.PutObject(nonTerm, g.Bucket, obj.Name, obj.Reader, obj.Size, putOpts)
+						if err != nil {
+							g.Error("upload error:", err)
+							op.Err = err.Error()
 						}
-						g.Error(err)
+						obj.VersionID = res.VersionID
+
+						if res.Size != obj.Size && op.Err == "" {
+							err := fmt.Sprint("short upload. want:", obj.Size, ", got:", res.Size)
+							if op.Err == "" {
+								op.Err = err
+							}
+							g.Error(err)
+						}
+						clDone()
+						if op.Err == "" {
+							g.Dist.addObj(*obj)
+						}
 					}
-					clDone()
-					if op.Err == "" {
-						g.Dist.addObj(*obj)
-					}
+					op.End = time.Now()
 					rcv <- op
 				case http.MethodDelete:
 					client, clDone := g.Client()
