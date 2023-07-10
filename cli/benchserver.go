@@ -239,8 +239,10 @@ func runServerBenchmark(ctx *cli.Context, b bench.Benchmark) (bool, error) {
 		}
 	}
 	monitor.OperationsReady(allOps, fileName, commandLine(ctx))
+	/* Disabling analysis after every benchmark
 	printAnalysis(ctx, allOps)
-
+	*/
+	
 	err = conns.startStageAll(stageCleanup, time.Now(), false)
 	if err != nil {
 		errorLn("Failed to clean up all clients", err)
