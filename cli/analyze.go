@@ -452,6 +452,10 @@ func writeSegs(ctx *cli.Context, wrSegs io.Writer, ops bench.Operations, allThre
 	}
 }
 
+func formatDuration(d time.Duration) string {
+	return fmt.Sprintf("%dms", d.Round(time.Millisecond).Milliseconds())
+}
+
 func printRequestAnalysis(_ *cli.Context, ops aggregate.Operation, details bool) {
 	console.SetColor("Print", color.New(color.FgHiWhite))
 
@@ -468,13 +472,13 @@ func printRequestAnalysis(_ *cli.Context, ops aggregate.Operation, details bool)
 		}
 
 		console.Print(
-			" * Avg: ", time.Duration(reqs.DurAvgMillis)*time.Millisecond,
-			", 50%: ", time.Duration(reqs.DurMedianMillis)*time.Millisecond,
-			", 90%: ", time.Duration(reqs.Dur90Millis)*time.Millisecond,
-			", 99%: ", time.Duration(reqs.Dur99Millis)*time.Millisecond,
-			", Fastest: ", time.Duration(reqs.FastestMillis)*time.Millisecond,
-			", Slowest: ", time.Duration(reqs.SlowestMillis)*time.Millisecond,
-			", StdDev: ", time.Duration(reqs.StdDev)*time.Millisecond,
+			" * Avg: ", formatDuration(time.Duration(reqs.DurAvgMillis)*time.Millisecond),
+			", 50%: ", formatDuration(time.Duration(reqs.DurMedianMillis)*time.Millisecond),
+			", 90%: ", formatDuration(time.Duration(reqs.Dur90Millis)*time.Millisecond),
+			", 99%: ", formatDuration(time.Duration(reqs.Dur99Millis)*time.Millisecond),
+			", Fastest: ", formatDuration(time.Duration(reqs.FastestMillis)*time.Millisecond),
+			", Slowest: ", formatDuration(time.Duration(reqs.SlowestMillis)*time.Millisecond),
+			", StdDev: ", formatDuration(time.Duration(reqs.StdDev)*time.Millisecond),
 			"\n")
 
 		if reqs.FirstByte != nil {
@@ -484,13 +488,13 @@ func printRequestAnalysis(_ *cli.Context, ops aggregate.Operation, details bool)
 		if details && reqs.FirstAccess != nil {
 			reqs := reqs.FirstAccess
 			console.Print(
-				" * First Access: Avg: ", time.Duration(reqs.DurAvgMillis)*time.Millisecond,
-				", 50%: ", time.Duration(reqs.DurMedianMillis)*time.Millisecond,
-				", 90%: ", time.Duration(reqs.Dur90Millis)*time.Millisecond,
-				", 99%: ", time.Duration(reqs.Dur99Millis)*time.Millisecond,
-				", Fastest: ", time.Duration(reqs.FastestMillis)*time.Millisecond,
-				", Slowest: ", time.Duration(reqs.SlowestMillis)*time.Millisecond,
-				", StdDev: ", time.Duration(reqs.StdDev)*time.Millisecond,
+				" * First Access: Avg: ", formatDuration(time.Duration(reqs.DurAvgMillis)*time.Millisecond),
+				", 50%: ", formatDuration(time.Duration(reqs.DurMedianMillis)*time.Millisecond),
+				", 90%: ", formatDuration(time.Duration(reqs.Dur90Millis)*time.Millisecond),
+				", 99%: ", formatDuration(time.Duration(reqs.Dur99Millis)*time.Millisecond),
+				", Fastest: ", formatDuration(time.Duration(reqs.FastestMillis)*time.Millisecond),
+				", Slowest: ", formatDuration(time.Duration(reqs.SlowestMillis)*time.Millisecond),
+				", StdDev: ", formatDuration(time.Duration(reqs.StdDev)*time.Millisecond),
 				"\n")
 			if reqs.FirstByte != nil {
 				console.Print(" * First Access TTFB: ", reqs.FirstByte, "\n")
@@ -499,13 +503,13 @@ func printRequestAnalysis(_ *cli.Context, ops aggregate.Operation, details bool)
 		if details && reqs.LastAccess != nil {
 			reqs := reqs.LastAccess
 			console.Print(
-				" * Last Access: Avg: ", time.Duration(reqs.DurAvgMillis)*time.Millisecond,
-				", 50%: ", time.Duration(reqs.DurMedianMillis)*time.Millisecond,
-				", 90%: ", time.Duration(reqs.Dur90Millis)*time.Millisecond,
-				", 99%: ", time.Duration(reqs.Dur99Millis)*time.Millisecond,
-				", Fastest: ", time.Duration(reqs.FastestMillis)*time.Millisecond,
-				", Slowest: ", time.Duration(reqs.SlowestMillis)*time.Millisecond,
-				", StdDev: ", time.Duration(reqs.StdDev)*time.Millisecond,
+				" * Last Access: Avg: ", formatDuration(time.Duration(reqs.DurAvgMillis)*time.Millisecond),
+				", 50%: ", formatDuration(time.Duration(reqs.DurMedianMillis)*time.Millisecond),
+				", 90%: ", formatDuration(time.Duration(reqs.Dur90Millis)*time.Millisecond),
+				", 99%: ", formatDuration(time.Duration(reqs.Dur99Millis)*time.Millisecond),
+				", Fastest: ", formatDuration(time.Duration(reqs.FastestMillis)*time.Millisecond),
+				", Slowest: ", formatDuration(time.Duration(reqs.SlowestMillis)*time.Millisecond),
+				", StdDev: ", formatDuration(time.Duration(reqs.StdDev)*time.Millisecond),
 				"\n")
 			if reqs.FirstByte != nil {
 				console.Print(" * Last Access TTFB: ", reqs.FirstByte, "\n")
@@ -523,12 +527,12 @@ func printRequestAnalysis(_ *cli.Context, ops aggregate.Operation, details bool)
 				}
 				console.SetColor("Print", color.New(color.FgWhite))
 				console.Println(" *", ep, "-", reqs.Requests, "requests:",
-					"\n\t- Avg:", time.Duration(reqs.DurAvgMillis)*time.Millisecond,
-					"Fastest:", time.Duration(reqs.FastestMillis)*time.Millisecond,
-					"Slowest:", time.Duration(reqs.SlowestMillis)*time.Millisecond,
-					"50%:", time.Duration(reqs.DurMedianMillis)*time.Millisecond,
-					"90%:", time.Duration(reqs.Dur90Millis)*time.Millisecond,
-					"StdDev:", time.Duration(reqs.StdDev)*time.Millisecond)
+					"\n\t- Avg:", formatDuration(time.Duration(reqs.DurAvgMillis)*time.Millisecond),
+					" Fastest:", formatDuration(time.Duration(reqs.FastestMillis)*time.Millisecond),
+					" Slowest:", formatDuration(time.Duration(reqs.SlowestMillis)*time.Millisecond),
+					" 50%:", formatDuration(time.Duration(reqs.DurMedianMillis)*time.Millisecond),
+					" 90%:", formatDuration(time.Duration(reqs.Dur90Millis)*time.Millisecond),
+					" StdDev:", formatDuration(time.Duration(reqs.StdDev)*time.Millisecond))
 				if reqs.FirstByte != nil {
 					console.Println("\t- First Byte:", reqs.FirstByte)
 				}
