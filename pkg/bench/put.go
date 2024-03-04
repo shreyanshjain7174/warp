@@ -142,7 +142,7 @@ func (u *Put) Start(ctx context.Context, wait chan struct{}) (Operations, error)
 				cldone()
 				rcv <- op
 				objectcount++
-				if ctx.Value("duration") != 5*time.Minute && u.CreateObjects != 2500 && objectcount >= u.CreateObjects {
+				if objectcount == u.CreateObjects {
 					return
 				}
 			}
