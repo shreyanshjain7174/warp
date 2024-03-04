@@ -53,7 +53,7 @@ var benchFlags = []cli.Flag{
 	cli.DurationFlag{
 		Name:  "duration",
 		Usage: "Duration to run the benchmark. Use 's' and 'm' to specify seconds and minutes.",
-		Value: 48 * time.Hour,
+		Value: 5 * time.Minute,
 	},
 	cli.BoolFlag{
 		Name:  "autoterm",
